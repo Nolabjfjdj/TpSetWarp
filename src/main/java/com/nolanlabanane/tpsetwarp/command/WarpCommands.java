@@ -1,6 +1,7 @@
 package com.nolanlabanane.tpsetwarp.command;
 
 import com.mojang.brigadier.CommandDispatcher;
+import com.nolanlabanane.tpsetwarp.lang.LanguageManager;
 import com.nolanlabanane.tpsetwarp.warp.WarpManager;
 import net.minecraft.commands.CommandSourceStack;
 
@@ -13,12 +14,12 @@ public final class WarpCommands {
     private WarpCommands() {
     }
 
-    public static void registerAll(CommandDispatcher<CommandSourceStack> dispatcher, WarpManager warpManager) {
-        dispatcher.register(SetWarpCommand.build(warpManager));
-        dispatcher.register(WarpCommand.build(warpManager));
-        dispatcher.register(DelWarpCommand.build(warpManager));
-        dispatcher.register(WarpsCommand.build(warpManager));
-        dispatcher.register(RenameWarpCommand.build(warpManager));
-        dispatcher.register(WarpInfoCommand.build(warpManager));
+    public static void registerAll(CommandDispatcher<CommandSourceStack> dispatcher, WarpManager warpManager, LanguageManager languageManager) {
+        dispatcher.register(SetWarpCommand.build(warpManager, languageManager));
+        dispatcher.register(WarpCommand.build(warpManager, languageManager));
+        dispatcher.register(DelWarpCommand.build(warpManager, languageManager));
+        dispatcher.register(WarpsCommand.build(warpManager, languageManager));
+        dispatcher.register(RenameWarpCommand.build(warpManager, languageManager));
+        dispatcher.register(WarpInfoCommand.build(warpManager, languageManager));
     }
 }

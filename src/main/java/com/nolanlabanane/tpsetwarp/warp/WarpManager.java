@@ -10,91 +10,108 @@ import java.util.Optional;
 
 /**
  * Gère les warps en mémoire (recherche O(1) via HashMap, aucune I/O
- * lors des lectures pour rester léger et performant).
- * Chaque modification déclenche une sauvegarde immédiate sur disque
- * via WarpStorage pour ne jamais perdre de données.
- */
-public final class WarpManager {
-
-    private final Map<String, Warp> warps = new LinkedHashMap<>();
-    private final WarpStorage storage;
-
-    public WarpManager(Path worldDataFolder) {
-        this.storage = new WarpStorage(worldDataFolder);
-    }
-
-    /** Charge les warps depuis le disque. À appeler une fois au démarrage du serveur. */
-    public void load() {
-        warps.clear();
-        warps.putAll(storage.load());
-    }
-
-    /** Sauvegarde immédiate de l'état courant. */
-    private void persist() {
-        storage.save(warps);
-    }
-
-    public boolean exists(String name) {
-        return warps.containsKey(normalize(name));
-    }
-
-    public Optional<Warp> get(String name) {
-        return Optional.ofNullable(warps.get(normalize(name)));
-    }
-
-    /**
-     * Crée un warp. Retourne false si un warp de ce nom existe déjà (aucune écriture n'est faite dans ce cas).
+  * lors des lectures pour rester léger et performant).
+   * Chaque modification déclenche une sauvegarde immédiate sur disque
+    * via WarpStorage pour ne jamais perdre de données.
      */
-    public boolean create(Warp warp) {
-        String key = normalize(warp.getName());
-        if (warps.containsKey(key)) {
-            return false;
-        }
-        warps.put(key, warp);
-        persist();
-        return true;
-    }
+     public final class WarpManager {
 
-    /** Supprime un warp. Retourne false s'il n'existait pas. */
-    public boolean delete(String name) {
-        String key = normalize(name);
-        if (warps.remove(key) == null) {
-            return false;
-        }
-        persist();
-        return true;
-    }
+         private final Map<String, Warp> warps = new LinkedHashMap<>();
+             private WarpStorage storage;
 
-    /**
-     * Renomme un warp existant.
-     * Retourne false si l'ancien nom n'existe pas ou si le nouveau nom est déjà pris.
-     */
-    public boolean rename(String oldName, String newName) {
-        String oldKey = normalize(oldName);
-        String newKey = normalize(newName);
+                 /**
+                      * Constructeur sans argument : le manager existe dès le lancement du mod,
+                           * AVANT même qu'un monde soit chargé. C'est nécessaire car RegisterCommandsEvent
+                                * (Forge) peut se déclencher avant ServerStartingEvent : les commandes ont donc
+                                     * besoin d'une instance valide de WarpManager dès le départ, même sans stockage.
+                                          * Le vrai chemin de sauvegarde est branché plus tard via initialize().
+                                               */
+                                                   public WarpManager() {
+                                                       }
 
-        Warp existing = warps.get(oldKey);
-        if (existing == null || warps.containsKey(newKey)) {
-            return false;
-        }
+                                                           /**
+                                                                * À appeler une fois que le monde est disponible (ServerStartingEvent).
+                                                                     * Branche le stockage sur le bon dossier et charge les warps existants.
+                                                                          */
+                                                                              public void initialize(Path worldDataFolder) {
+                                                                                      this.storage = new WarpStorage(worldDataFolder);
+                                                                                              load();
+                                                                                                  }
 
-        warps.remove(oldKey);
-        warps.put(newKey, existing.withName(newName));
-        persist();
-        return true;
-    }
+                                                                                                      /** Charge les warps depuis le disque. */
+                                                                                                          private void load() {
+                                                                                                                  warps.clear();
+                                                                                                                          warps.putAll(storage.load());
+                                                                                                                              }
 
-    /** Retourne tous les warps, triés par nom pour un affichage stable dans /warps. */
-    public Collection<Warp> getAll() {
-        return warps.values();
-    }
+                                                                                                                                  /** Sauvegarde immédiate de l'état courant (ignorée si le storage n'est pas encore prêt). */
+                                                                                                                                      private void persist() {
+                                                                                                                                              if (storage != null) {
+                                                                                                                                                          storage.save(warps);
+                                                                                                                                                                  }
+                                                                                                                                                                      }
 
-    public int count() {
-        return warps.size();
-    }
+                                                                                                                                                                          public boolean exists(String name) {
+                                                                                                                                                                                  return warps.containsKey(normalize(name));
+                                                                                                                                                                                      }
 
-    /** Les noms de warp sont insensibles à la casse pour éviter les doublons "Spawn" / "spawn". */
-    private String normalize(String name) {
-        return name.toLowerCase();
-    }
-}
+                                                                                                                                                                                          public Optional<Warp> get(String name) {
+                                                                                                                                                                                                  return Optional.ofNullable(warps.get(normalize(name)));
+                                                                                                                                                                                                      }
+
+                                                                                                                                                                                                          /**
+                                                                                                                                                                                                               * Crée un warp. Retourne false si un warp de ce nom existe déjà (aucune écriture n'est faite dans ce cas).
+                                                                                                                                                                                                                    */
+                                                                                                                                                                                                                        public boolean create(Warp warp) {
+                                                                                                                                                                                                                                String key = normalize(warp.getName());
+                                                                                                                                                                                                                                        if (warps.containsKey(key)) {
+                                                                                                                                                                                                                                                    return false;
+                                                                                                                                                                                                                                                            }
+                                                                                                                                                                                                                                                                    warps.put(key, warp);
+                                                                                                                                                                                                                                                                            persist();
+                                                                                                                                                                                                                                                                                    return true;
+                                                                                                                                                                                                                                                                                        }
+
+                                                                                                                                                                                                                                                                                            /** Supprime un warp. Retourne false s'il n'existait pas. */
+                                                                                                                                                                                                                                                                                                public boolean delete(String name) {
+                                                                                                                                                                                                                                                                                                        String key = normalize(name);
+                                                                                                                                                                                                                                                                                                                if (warps.remove(key) == null) {
+                                                                                                                                                                                                                                                                                                                            return false;
+                                                                                                                                                                                                                                                                                                                                    }
+                                                                                                                                                                                                                                                                                                                                            persist();
+                                                                                                                                                                                                                                                                                                                                                    return true;
+                                                                                                                                                                                                                                                                                                                                                        }
+
+                                                                                                                                                                                                                                                                                                                                                            /**
+                                                                                                                                                                                                                                                                                                                                                                 * Renomme un warp existant.
+                                                                                                                                                                                                                                                                                                                                                                      * Retourne false si l'ancien nom n'existe pas ou si le nouveau nom est déjà pris.
+                                                                                                                                                                                                                                                                                                                                                                           */
+                                                                                                                                                                                                                                                                                                                                                                               public boolean rename(String oldName, String newName) {
+                                                                                                                                                                                                                                                                                                                                                                                       String oldKey = normalize(oldName);
+                                                                                                                                                                                                                                                                                                                                                                                               String newKey = normalize(newName);
+
+                                                                                                                                                                                                                                                                                                                                                                                                       Warp existing = warps.get(oldKey);
+                                                                                                                                                                                                                                                                                                                                                                                                               if (existing == null || warps.containsKey(newKey)) {
+                                                                                                                                                                                                                                                                                                                                                                                                                           return false;
+                                                                                                                                                                                                                                                                                                                                                                                                                                   }
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                           warps.remove(oldKey);
+                                                                                                                                                                                                                                                                                                                                                                                                                                                   warps.put(newKey, existing.withName(newName));
+                                                                                                                                                                                                                                                                                                                                                                                                                                                           persist();
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                   return true;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                       }
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                           /** Retourne tous les warps, triés par nom pour un affichage stable dans /warps. */
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                               public Collection<Warp> getAll() {
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       return warps.values();
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           }
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               public int count() {
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       return warps.size();
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           }
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               /** Les noms de warp sont insensibles à la casse pour éviter les doublons "Spawn" / "spawn". */
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   private String normalize(String name) {
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           return name.toLowerCase();
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               }
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               }
