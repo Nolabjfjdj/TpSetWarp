@@ -21,5 +21,6 @@ public final class WarpCommands {
         dispatcher.register(WarpsCommand.build(warpManager, languageManager));
         dispatcher.register(RenameWarpCommand.build(warpManager, languageManager));
         dispatcher.register(WarpInfoCommand.build(warpManager, languageManager));
+        dispatcher.register(LanguageCommand.build(languageManager));
     }
 }

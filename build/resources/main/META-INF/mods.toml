@@ -5,7 +5,7 @@ issueTrackerURL=""
 
 [[mods]]
 modId="tpsetwarp"
-version="1.0.0"
+version="1.0.1"
 displayName="TpSetWarp"
 authors="NolanLaBanane415"
 description='''Un système de warps simple, rapide et performant pour Minecraft.

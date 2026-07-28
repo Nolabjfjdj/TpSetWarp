@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "id": "tpsetwarp",
+  "version": "1.0.1",
+  "name": "TpSetWarp",
+  "description": "Un système de warps simple, rapide et performant pour Minecraft. Commandes : /setwarp, /warp, /delwarp, /warps, /renamewarp, /warpinfo",
+  "authors": [
+    "NolanLaBanane415"
+  ],
+  "license": "MIT",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.nolanlabanane.tpsetwarp.TpSetWarpMod"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.16.9",
+    "minecraft": "~1.21.4",
+    "java": ">=21",
+    "fabric-api": "*"
+  }
+}

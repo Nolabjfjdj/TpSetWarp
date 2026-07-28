@@ -1,0 +1,26 @@
+modLoader="javafml"
+loaderVersion="[1,)"
+license="MIT"
+issueTrackerURL=""
+
+[[mods]]
+modId="tpsetwarp"
+version="1.0.0"
+displayName="TpSetWarp"
+authors="NolanLaBanane415"
+description='''Un système de warps simple, rapide et performant pour Minecraft.
+Commandes : /setwarp, /warp, /delwarp, /warps, /renamewarp, /warpinfo'''
+
+[[dependencies.tpsetwarp]]
+    modId="forge"
+    mandatory=true
+    versionRange="[54.1.14,)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.tpsetwarp]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.21.4,)"
+    ordering="NONE"
+    side="BOTH"
