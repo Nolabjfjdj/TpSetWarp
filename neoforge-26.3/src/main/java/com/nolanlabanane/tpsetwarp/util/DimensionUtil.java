@@ -2,7 +2,7 @@ package com.nolanlabanane.tpsetwarp.util;
 
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 
@@ -18,7 +18,7 @@ public final class DimensionUtil {
 
     /** Convertit un ServerLevel en identifiant texte "namespace:path". */
     public static String toDimensionId(ServerLevel level) {
-        return level.dimension().location().toString();
+        return level.dimension().identifier().toString();
     }
 
     /**
@@ -27,7 +27,7 @@ public final class DimensionUtil {
      * Retourne null si la dimension n'existe pas (mod désinstallé, dimension custom absente, etc.).
      */
     public static ServerLevel resolveLevel(MinecraftServer server, String dimensionId) {
-        ResourceLocation location = ResourceLocation.tryParse(dimensionId);
+        Identifier location = Identifier.tryParse(dimensionId);
         if (location == null) {
             return null;
         }

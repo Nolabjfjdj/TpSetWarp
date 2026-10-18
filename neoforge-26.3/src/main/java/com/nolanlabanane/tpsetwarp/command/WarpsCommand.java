@@ -25,7 +25,7 @@ public final class WarpsCommand {
 
     public static LiteralArgumentBuilder<CommandSourceStack> build(WarpManager warpManager, LanguageManager languageManager) {
         return Commands.literal("warps")
-                .requires(source -> source.hasPermission(0))
+                .requires(Commands.hasPermission(Commands.LEVEL_ALL))
                 .executes(ctx -> execute(ctx, warpManager, languageManager));
     }
 

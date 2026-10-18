@@ -21,7 +21,7 @@ public final class RenameWarpCommand {
 
     public static LiteralArgumentBuilder<CommandSourceStack> build(WarpManager warpManager, LanguageManager languageManager) {
         return Commands.literal("renamewarp")
-                .requires(source -> source.hasPermission(2))
+                .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
                 .then(Commands.argument("ancien", StringArgumentType.word())
                         .then(Commands.argument("nouveau", StringArgumentType.word())
                                 .executes(ctx -> execute(ctx, warpManager, languageManager))));

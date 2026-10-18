@@ -24,7 +24,7 @@ public final class SetWarpCommand {
 
     public static LiteralArgumentBuilder<CommandSourceStack> build(WarpManager warpManager, LanguageManager languageManager) {
         return Commands.literal("setwarp")
-                .requires(source -> source.hasPermission(2))
+                .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
                 .then(Commands.argument("nom", StringArgumentType.word())
                         .executes(ctx -> execute(ctx, warpManager, languageManager)));
     }
@@ -48,13 +48,13 @@ public final class SetWarpCommand {
         Warp warp = new Warp(
                 name,
                 player.getUUID(),
-                player.getGameProfile().getName(),
+                player.getGameProfile().name(),
                 player.getX(),
                 player.getY(),
                 player.getZ(),
                 player.getYRot(),
                 player.getXRot(),
-                DimensionUtil.toDimensionId(player.serverLevel()),
+                DimensionUtil.toDimensionId(player.level()),
                 System.currentTimeMillis()
         );
 

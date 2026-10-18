@@ -23,7 +23,7 @@ public final class LanguageCommand {
 
     public static LiteralArgumentBuilder<CommandSourceStack> build(LanguageManager languageManager) {
         return Commands.literal("warplang")
-                .requires(source -> source.hasPermission(0))
+                .requires(Commands.hasPermission(Commands.LEVEL_ALL))
                 .then(Commands.argument("langue", StringArgumentType.word())
                         .executes(ctx -> execute(ctx, languageManager)));
     }

@@ -21,7 +21,7 @@ public final class DelWarpCommand {
 
     public static LiteralArgumentBuilder<CommandSourceStack> build(WarpManager warpManager, LanguageManager languageManager) {
         return Commands.literal("delwarp")
-                .requires(source -> source.hasPermission(2))
+                .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
                 .then(Commands.argument("nom", StringArgumentType.word())
                         .executes(ctx -> execute(ctx, warpManager, languageManager)));
     }

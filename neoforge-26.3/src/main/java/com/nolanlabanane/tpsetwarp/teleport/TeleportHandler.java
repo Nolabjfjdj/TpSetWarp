@@ -33,7 +33,7 @@ public final class TeleportHandler {
      * Conserve l'orientation (yaw/pitch) enregistrée dans le warp.
      */
     public static Result teleport(ServerPlayer player, Warp warp) {
-        ServerLevel targetLevel = DimensionUtil.resolveLevel(player.getServer(), warp.getDimension());
+        ServerLevel targetLevel = DimensionUtil.resolveLevel(player.level().getServer(), warp.getDimension());
         if (targetLevel == null) {
             return Result.DIMENSION_NOT_FOUND;
         }
