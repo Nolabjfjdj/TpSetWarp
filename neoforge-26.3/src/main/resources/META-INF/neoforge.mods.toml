@@ -1,0 +1,25 @@
+modLoader="javafml"
+loaderVersion="[26,)"
+license="MIT"
+
+[[mods]]
+modId="tpsetwarp"
+version="${mod_version}"
+displayName="TpSetWarp"
+authors="NolanLaBanane415"
+description='''Un système de warps simple, rapide et performant pour Minecraft.
+Commandes : /setwarp, /warp, /delwarp, /warps, /renamewarp, /warpinfo, /language'''
+
+[[dependencies.tpsetwarp]]
+modId="neoforge"
+type="required"
+versionRange="[26.3.0.48-beta,)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.tpsetwarp]]
+modId="minecraft"
+type="required"
+versionRange="[26.3,26.4)"
+ordering="NONE"
+side="BOTH"

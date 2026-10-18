@@ -1,0 +1,48 @@
+name: TpSetWarp NeoForge 26.3
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'neoforge-26.3/**'
+      - '.github/workflows/neoforge-26-3.yml'
+  pull_request:
+    paths:
+      - 'neoforge-26.3/**'
+      - '.github/workflows/neoforge-26-3.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build NeoForge 26.3 JAR
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java 25
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '25'
+          cache: gradle
+
+      - name: Set up Gradle 9.7.0
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '9.7.0'
+
+      - name: Build mod
+        run: gradle -p neoforge-26.3 clean build --no-daemon
+
+      - name: Upload mod JAR
+        uses: actions/upload-artifact@v4
+        with:
+          name: TpSetWarp-NeoForge-26.3
+          path: neoforge-26.3/build/libs/*.jar
+          if-no-files-found: error
+          retention-days: 14
